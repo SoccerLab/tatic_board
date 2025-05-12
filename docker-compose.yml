@@ -1,0 +1,52 @@
+services:
+  db:
+    image: postgres:latest
+    container_name: soccerlab_db
+    restart: always
+    env_file: ./backend/.dev.env
+    networks:
+      - internal
+    ports:
+      - "5432:5432"
+    volumes: 
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "soccerlab"]
+      interval: 5s
+      timeout: 2s
+      retries: 5
+
+  backend:
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    container_name: soccerlab_backend
+    env_file: ./backend/.dev.env
+    networks:
+      - web
+      - internal
+    ports:
+      "8000:8000"
+    volumes:
+      - ./backend:/app
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    container_name: soccerlab_frontend
+    networks:
+      - web
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+
+volumes:
+  db_data:

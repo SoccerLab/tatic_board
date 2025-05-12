@@ -1,0 +1,10 @@
+# 개발용 React (Vite 기반)
+FROM node:18
+
+WORKDIR /app
+
+COPY package.json package-lock.json ./
+RUN npm install
+
+# 실제 코드는 바인드 마운트 되므로 복사 생략
+CMD ["npm", "run", "dev"]
