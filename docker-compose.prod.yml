@@ -1,6 +1,8 @@
 version: "3.9"
 
 services:
+# ─────────────────────────────── DB ───────────────────────────────
+
   db:
     image: postgres:16
     container_name: soccerlab_db
@@ -9,12 +11,19 @@ services:
     volumes:
       - db_data:/var/lib/postgresql/data
     networks: [internal]
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "${POSTGRES_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
 
+# ─────────────────────────── BACKEND (Django) ─────────────────────
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile.prod
-    container_name: soccerlab_backend
+    container_name: soccerlab_backend_prod
     restart: unless-stopped
     env_file: ./backend/.prod.env
     depends_on:
@@ -22,23 +31,21 @@ services:
         condition: service_healthy
     networks: [web, internal]
 
-  frontend-build:             # 빌드용 일시 컨테이너
+# ──────────────────────────── NGINX + FRONT ───────────────────────
+
+  frontend-build:             # 빌드용 일시 컨테이너 + nginx
     build:
       context: ./frontend
       dockerfile: Dockerfile.prod
-    container_name: soccerlab_frontend_build
-    command: ["echo", "build complete"]   # 실행 후 바로 종료
-    networks: [web]
-
-  nginx:
-    image: nginx:1.25-alpine
+    container_name: soccerlab_frontend_prod
     restart: unless-stopped
+    networks: [web]
     depends_on:
       - backend
-      - frontend-build
     ports:
       - "80:80"
       - "443:443"
+
     networks: [web]
 
 volumes:
@@ -47,3 +54,8 @@ volumes:
 networks:
   web:
   internal:
+    driver: bridge
+    internal: true
+  # internal 네트워크는 외부에서 접근할 수 없음
+  # web 네트워크는 외부에서 접근 가능
+
