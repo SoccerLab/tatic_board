@@ -11,7 +11,7 @@ services:
     volumes: 
       - db_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD", "pg_isready", "-U", "soccerlab"]
+      test: ["CMD", "pg_isready", "-U", "${POSTGRES_USER}"]
       interval: 5s
       timeout: 2s
       retries: 5
@@ -26,7 +26,7 @@ services:
       - web
       - internal
     ports:
-      "8000:8000"
+      - "8000:8000"
     volumes:
       - ./backend:/app
     depends_on:
@@ -50,3 +50,10 @@ services:
 
 volumes:
   db_data:
+networks:
+  web:
+    driver: bridge
+  internal:
+    driver: bridge
+    internal: true
+    # internal 네트워크는 외부에서 접근할 수 없음
