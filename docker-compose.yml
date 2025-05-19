@@ -8,16 +8,17 @@ services:
       - internal
     ports:
       - "5432:5432"
-    volumes: 
+    volumes:
       - db_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD", "pg_isready", "-U", "${POSTGRES_USER}"]
+      test:
+        ["CMD", "pg_isready", "-U", "${POSTGRES_USER}", "-d", "${POSTGRES_DB}"]
       interval: 5s
       timeout: 2s
       retries: 5
 
   backend:
-    build: 
+    build:
       context: ./backend
       dockerfile: Dockerfile.dev
     container_name: soccerlab_backend
