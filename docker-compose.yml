@@ -3,7 +3,7 @@ services:
     image: postgres:latest
     container_name: soccerlab_db
     restart: always
-    env_file: ./backend/.dev.env
+    env_file: backend/.dev.env
     networks:
       - internal
     ports:
@@ -22,7 +22,7 @@ services:
       context: ./backend
       dockerfile: Dockerfile.dev
     container_name: soccerlab_backend
-    env_file: ./backend/.dev.env
+    env_file: backend/.dev.env
     networks:
       - web
       - internal
