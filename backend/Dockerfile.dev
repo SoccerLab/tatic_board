@@ -5,11 +5,11 @@ FROM python:3.11-slim
 WORKDIR /app
 
 # 3. 의존성 설치 (코드 자체는 바인드 마운트로 들어옴)
-# COPY requirements.txt .
-# COPY docker-entrypoint-dev.sh .
-# COPY wait-for-it.sh .
-# RUN chmod +x docker-entrypoint-dev.sh
-# RUN chmod +x wait-for-it.sh
+COPY requirements.txt .
+COPY docker-entrypoint-dev.sh .
+COPY wait-for-it.sh .
+RUN chmod +x docker-entrypoint-dev.sh
+RUN chmod +x wait-for-it.sh
 RUN pip install --no-cache-dir -r requirements.txt
 
 # 4. 포트 노출 (개발 시 외부에서 보기 쉽게)
