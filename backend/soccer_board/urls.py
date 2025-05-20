@@ -25,7 +25,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.urls import path
-from users.views import UserMeView, TestUserDetailView
+from rest_framework_simplejwt.views import TokenRefreshView
+from users.views import UserMeView, TestUserDetailView, GoogleLoginAPIView
 from board.views import (
     BoardView, BoardDetailView, BoardSaveView, SceneObjectListView, TestBoardView, TestBoardDetailView, TestBoardSaveView, TestSceneObjectView
 )
@@ -36,6 +37,8 @@ urlpatterns = [
     path('api/boards/<int:pk>', BoardDetailView.as_view()),
     path('api/boards/<int:board_id>/save', BoardSaveView.as_view()),
     path('api/scenes/<int:scene_id>/objects', SceneObjectListView.as_view()),
+    path('api/auth/google-login', GoogleLoginAPIView.as_view(), name='google-login'),
+    path('api/auth/token/refresh', TokenRefreshView.as_view(), name='token_refresh'),
     path('admin/', admin.site.urls),  # Admin 페이지 접근 경로
 
     #테스트용
