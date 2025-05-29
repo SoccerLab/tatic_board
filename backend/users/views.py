@@ -39,15 +39,32 @@ class GoogleLoginAPIView(APIView):
 
             # JWT 토큰 생성
             refresh = RefreshToken.for_user(user)
-            return Response({
-                'refresh': str(refresh),
-                'access': str(refresh.access_token),
+            response = Response({
+                "access": str(refresh.access_token),
+                "refresh": str(refresh),
                 'user': {
                     'email': user.email,
                     'name': user.name,
                     'profile_image': user.profile_image,
                 }
             })
+            response.set_cookie(
+                key='access',
+                value=str(refresh.access_token),
+                httponly=True,
+                samesite='Lax',  # 'None' + Secure이면 크로스도메인도 가능
+                secure=False,    # 개발 환경에서는 False, 배포시 True (HTTPS 필수)
+                max_age=60 * 15  # access token 만료 시간 15분
+            )
+            response.set_cookie(
+                key='refresh',
+                value=str(refresh),
+                httponly=True,
+                samesite='Lax',
+                secure=False,
+                max_age=60 * 60 * 24 * 7  # 7일짜리 refresh token
+            )
+            return response
 
         except ValueError:
             return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)

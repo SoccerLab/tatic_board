@@ -43,9 +43,11 @@ INSTALLED_APPS = [
     'board',
     'rest_framework',
     'rest_framework_simplejwt',
+    "corsheaders",
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",  # 꼭 위쪽에 위치해야 함
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -154,3 +156,10 @@ SIMPLE_JWT = {
 
 
 GOOGLE_CLIENT_ID = config("GOOGLE_CLIENT_ID", default="")
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",  # 또는 Vite 개발 서버 포트
+    "http://127.0.0.1:5173",
+]
+
+CORS_ALLOW_CREDENTIALS = True
