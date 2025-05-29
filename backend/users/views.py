@@ -15,6 +15,7 @@ from .serializers import UserMeSerializer, UserMeUpdateSerializer
 class GoogleLoginAPIView(APIView):
     def post(self, request):
         token = request.data.get('id_token')
+        print("login request!")
         if not token:
             return Response({'error': 'id_token is required'}, status=status.HTTP_400_BAD_REQUEST)
             print("token is not included")
