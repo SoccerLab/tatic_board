@@ -17,7 +17,7 @@ class GoogleLoginAPIView(APIView):
         token = request.data.get('id_token')
         if not token:
             return Response({'error': 'id_token is required'}, status=status.HTTP_400_BAD_REQUEST)
-
+            print("token is not included")
         try:
             # 구글 토큰 검증
             idinfo = id_token.verify_oauth2_token(token, google_requests.Request(), settings.GOOGLE_CLIENT_ID)
@@ -67,6 +67,7 @@ class GoogleLoginAPIView(APIView):
             return response
 
         except ValueError:
+            print("invalid token")
             return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
 
 class UserMeView(generics.RetrieveUpdateDestroyAPIView):
