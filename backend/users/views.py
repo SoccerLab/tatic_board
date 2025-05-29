@@ -27,6 +27,8 @@ class GoogleLoginAPIView(APIView):
             email = idinfo.get('email')
             name = idinfo.get('name', '')
             picture = idinfo.get('picture', '')
+            print(email)
+            print(name)
 
             if not email:
                 return Response({'error': 'Email not found in token'}, status=status.HTTP_400_BAD_REQUEST)
@@ -37,9 +39,13 @@ class GoogleLoginAPIView(APIView):
                 'name': name,
                 'profile_image': picture,
             })
+            
+            print(user)
 
             # JWT 토큰 생성
             refresh = RefreshToken.for_user(user)
+            print("refresh")
+            print(refresh)
             response = Response({
                 "access": str(refresh.access_token),
                 "refresh": str(refresh),
