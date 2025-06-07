@@ -78,8 +78,8 @@ class GoogleLoginAPIView(APIView):
             return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
 
 class UserMeView(generics.RetrieveUpdateDestroyAPIView):
-    # permission_classes = [IsAuthenticated]
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [IsAuthenticated]
+    # permission_classes = [permissions.AllowAny]
 
     def get(self, request):
         serializer = UserMeSerializer(request.user)
