@@ -1,17 +1,22 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import LoginPage from './pages/LoginPage';
-// import TeamPage from './pages/TeamPage';
-// import BoardPage from './pages/BoardPage';
+import Login from './pages/Login';
+import Board from './pages/Board';
+import Success from "./pages/Success";
+import Auth from "./pages/Authorization"
+// import Team from './pages/Team';
 
-export default function App() {
+export function App() {
+    console.log("app");
   return (
     <BrowserRouter>
+    <Auth />
       <Routes>
-        <Route path="/" element={<LoginPage />} />
-        {/* <Route path="/teams" element={<TeamPage />} /> */}
-        {/* <Route path="/boards" element={<BoardPage />} /> */}
-
+        <Route path="/" element={<Board />} />
+        <Route path="/login" element={<Login />} />
+        {/* <Route path="/teams" element={<Team />} /> */}
+        {/* <Route path="/boards" element={<Board />} /> */}
+        <Route path="/success" element={<Success />} />
       </Routes>
     </BrowserRouter>
   );

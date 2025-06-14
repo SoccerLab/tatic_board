@@ -1,6 +1,10 @@
 import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom"; // ✅ 추가
+import Auth from "./Authorization"
 
-export default function LoginPage() {
+export default function Login() {
+     const navigate = useNavigate(); // ✅ 리디렉션에 사용
+
      const handleCredentialResponse = async (response) => {
         console.log("callback");
         const idToken = response.credential;
@@ -17,12 +21,16 @@ export default function LoginPage() {
           });
     
           if (!res.ok) {
+            console.log("res is not ok");
             throw new Error("Login failed");
           }
     
           const data = await res.json();
           console.log("Login Success:", data);
           // 로그인 성공 후 상태 저장 또는 라우팅 처리
+        
+          navigate("/"); // ✅ 로그인 성공 시 페이지 이동
+          console.log("navigate to /called");
         } catch (error) {
           console.error("Login Error:", error);
         }
@@ -30,6 +38,7 @@ export default function LoginPage() {
     
       useEffect(() => {
         /* global google */
+        console.log("initializing....");
         window.google.accounts.id.initialize({
           client_id:
             "873432676720-76eoed9btvn2tpoaqcmcbi8d7ojcqhvm.apps.googleusercontent.com", // 구글 클라이언트 ID 입력
@@ -44,8 +53,9 @@ export default function LoginPage() {
     
   return (
     <div className="flex min-h-screen">
+        {/* <Auth></Auth> */}
       {/* Left - Strategy Graphic */}
-      <div className="bg-black text-white w-2/3 flex flex-col items-center justify-center relative">
+      <div className="bg-black text-white w-3/4 flex flex-col items-center justify-center relative">
         <h1 className="text-5xl font-bold tracking-widest">FOOTBALL</h1>
         <h2 className="text-3xl mt-2 text-gray-400 tracking-widest">STRATEGY</h2>
 
@@ -62,6 +72,19 @@ export default function LoginPage() {
           {/* 골 에어리어 */}
           <div className="absolute left-0 top-[41%] w-[5.2%] h-[18%] border border-white" />
           <div className="absolute right-0 top-[41%] w-[5.2%] h-[18%] border border-white" />
+       
+          {/* ─── 🥅 골대 추가 ───────────────────────────────── */}
+         {/* 왼쪽 골대 */}
+        <div className="absolute left-[-2%] top-[46.5%] w-[2%] h-[6%]">
+        {/* w = 2%  → 화면 가로선(=실제 골대 높이)  
+            h = 6%  → 화면 세로선(=실제 골대 너비)  */}
+        <div className="absolute inset-0 border-2 border-white border-r-0" />
+        </div>
+
+        {/* 오른쪽 골대 */}
+        <div className="absolute right-[-2%] top-[46.5%] w-[2%] h-[6%]">
+        <div className="absolute inset-0 border-2 border-white border-l-0" />
+        </div>
 
           {/* 플레이어 말 + 화살표 */}
           {/* 왼쪽 말 */}
